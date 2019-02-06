@@ -1,4 +1,4 @@
-# VidyoConnector-xamarin
+# VXamarin-MultiPage-Sample
 
 ## Clone Repository
 git clone https://github.com/tmelko-vidyo/Xamarin-MultiPage-Sample
