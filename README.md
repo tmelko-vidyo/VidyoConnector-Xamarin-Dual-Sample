@@ -1,7 +1,7 @@
 # VidyoConnector-xamarin
 
 ## Clone Repository
-git clone https://github.com/Vidyo/VidyoConnector-xamarin.git
+git clone https://github.com/tmelko-vidyo/Xamarin-MultiPage-Sample
 
 ## Overview
 VidyoConnector-xamarin is a Xamarin Forms cross platform application which contains three projects:
@@ -13,9 +13,9 @@ VidyoConnector-xamarin is a Xamarin Forms cross platform application which conta
 > Note: Highlighted steps are very important because samples already contain configurations specified below and both SDK packages are linked as relative folders located in VidyoConnector-xamarin directory.
 
 1. Download the latest Vidyo.io iOS SDK package: https://static.vidyo.io/latest/package/VidyoClient-iOSSDK.zip
-2. **Move the unzipped VidyoClient-iOSSDK folder to the VidyoConnector-xamarin directory.**
+2. **Move the unzipped VidyoClient-iOSSDK folder to the Xamarin-MultiPage-Sample directory.**
 3. Download the latest Vidyo.io Android SDK package: https://static.vidyo.io/latest/package/VidyoClient-AndroidSDK.zip
-4. **Move the unzipped VidyoClient-AndroidSDK folder to the VidyoConnector-xamarin directory.**
+4. **Move the unzipped VidyoClient-AndroidSDK folder to the Xamarin-MultiPage-Sample directory.**
 
 > Note: VidyoClient SDK version 4.1.23.21 or later is required.
 
