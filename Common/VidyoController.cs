@@ -13,23 +13,32 @@ using Android.OS;
 namespace VidyoConnector
 {
     public class VidyoController : IVidyoController, INotifyPropertyChanged, Connector.IConnect,
-    Connector.IRegisterLogEventListener, Connector.IRegisterLocalCameraEventListener
+        Connector.IRegisterLogEventListener,
+
+        /* Device manager listeners */
+        Connector.IRegisterLocalCameraEventListener,
+        Connector.IRegisterLocalMicrophoneEventListener,
+        Connector.IRegisterLocalSpeakerEventListener
     {
-    
+
+        private static readonly uint MAX_PARTICIPANTS = 8;
+
         /* Shared instance */
         private static readonly VidyoController _instance = new VidyoController();
         public static IVidyoController GetInstance() { return _instance; }
 
         private VidyoController() { }
 
-        private Connector mConnector = null;
+        private Connector mConnector;
 
         /* Init Vidyo Client only once per app lifecycle */
-        private bool mIsVidyoClientInitialized = false;
+        private bool mIsVidyoClientInitialized;
 
-        private bool mIsDebugEnabled = false;
-        private string mExperimentalOptions = null;
-        private bool mCameraPrivacyState = false;
+        private bool mIsDebugEnabled;
+        private string mExperimentalOptions;
+        private bool mCameraPrivacyState;
+
+        private bool mIsViewHandleValid;
 
         private Logger mLogger = Logger.GetInstance();
 
@@ -75,19 +84,20 @@ namespace VidyoConnector
                 throw new Exception("Client initialization error.");
             }
 
-            string clientVersion = "Failed";
-
             // Remember the reference to video view
             this.mVideoViewHolder = videoView;
 
-            mConnector = new Connector(IntPtr.Zero,
+            // Check video view handel. I
+            this.mIsViewHandleValid = videoView.Handle != IntPtr.Zero;
+
+            mConnector = new Connector(this.mVideoViewHolder.Handle,
                                                Connector.ConnectorViewStyle.ConnectorviewstyleDefault,
-                                               15,
+                                               MAX_PARTICIPANTS,
                                                "info@VidyoClient info@VidyoConnector warning",
                                                "",
                                                0);
             // Get the version of VidyoClient
-            clientVersion = mConnector.GetVersion();
+            string clientVersion = mConnector.GetVersion();
 
             // If enableDebug is configured then enable debugging
             if (mIsDebugEnabled)
@@ -112,7 +122,17 @@ namespace VidyoConnector
                 mLogger.Log("VidyoConnector RegisterLogEventListener failed");
             }
 
-            mLogger.Log("Connector instance has been created.");
+            if (!mConnector.RegisterLocalSpeakerEventListener(this))
+            {
+                mLogger.Log("VidyoConnector RegisterLocalSpeakerEventListener failed");
+            }
+
+            if (!mConnector.RegisterLocalMicrophoneEventListener(this))
+            {
+                mLogger.Log("VidyoConnector RegisterLocalSpeakerEventListener failed");
+            }
+
+            mLogger.Log("Connector instance has been created. View handle state: " + this.mIsViewHandleValid);
             return clientVersion;
         }
 
@@ -131,14 +151,18 @@ namespace VidyoConnector
         {
             if (mConnector != null)
             {
-                mConnector.SetCameraPrivacy(this.mCameraPrivacyState);
                 mConnector.SetMode(Connector.ConnectorMode.ConnectormodeForeground);
+                mConnector.SetCameraPrivacy(this.mCameraPrivacyState);
             }
         }
 
-        public void Destruct()
+        public void CleanUp()
         {
             mConnector.UnregisterLocalCameraEventListener();
+            mConnector.UnregisterLocalSpeakerEventListener();
+            mConnector.UnregisterLocalMicrophoneEventListener();
+
+            mConnector.UnregisterLogEventListener();
 
             mConnector.SelectLocalCamera(null);
             mConnector.SelectLocalMicrophone(null);
@@ -152,7 +176,7 @@ namespace VidyoConnector
 
         public bool Connect(string host, string token, string displayName, string resourceId)
         {
-            return mConnector.Connect(host, token, displayName, resourceId, this);
+            return mConnector.Connect(host, token, "Taras Mobile", resourceId, this);
         }
 
         public void Disconnect()
@@ -183,21 +207,39 @@ namespace VidyoConnector
          * Private Utility Functions
          */
 
-        // Refresh the UI
+        /* Refresh renderer */
         public void RefreshUI()
         {
             // Refresh the rendering of the video
             if (mConnector != null)
             {
-                uint w = mVideoViewHolder.NativeWidth;
-                uint h = mVideoViewHolder.NativeHeight;
+                uint width = mVideoViewHolder.NativeWidth;
+                uint height = mVideoViewHolder.NativeHeight;
 
-                mConnector.AssignViewToCompositeRenderer(mVideoViewHolder.Handle, Connector.ConnectorViewStyle.ConnectorviewstyleDefault, 15);
-                mConnector.ShowViewAt(mVideoViewHolder.Handle, 0, 0, w, h);
+                mConnector.ShowViewAt(mVideoViewHolder.Handle, 0, 0, width, height);
 
-                mLogger.Log("VidyoConnectorShowViewAt: x = 0, y = 0, w = " + w + ", h = " + h);
+                mLogger.Log("VidyoConnectorShowViewAt: x = 0, y = 0, w = " + width + ", h = " + height);
             }
         }
+
+        public void RefreshViewHandle()
+        {
+            /* Video view handle was not valid on initialization state. Let's reassing it again */
+            if (!this.mIsViewHandleValid)
+            {
+                mConnector.AssignViewToCompositeRenderer(mVideoViewHolder.Handle, Connector.ConnectorViewStyle.ConnectorviewstyleDefault, MAX_PARTICIPANTS);
+                RefreshUI();
+
+                this.mIsViewHandleValid = mVideoViewHolder.Handle != IntPtr.Zero;
+                mLogger.Log("Video handle has been refreshed. Valid: " + this.mIsViewHandleValid);
+            }
+            else
+            {
+                mLogger.Log("Video handle was valid on construct step.");
+            }
+        }
+
+        /* Connection callbacks */
 
         public void OnSuccess()
         {
@@ -214,14 +256,38 @@ namespace VidyoConnector
         public void OnDisconnected(Connector.ConnectorDisconnectReason reason)
         {
             mLogger.Log("OnDisconnected");
-            ConnectorState = (reason == Connector.ConnectorDisconnectReason.ConnectordisconnectreasonDisconnected) ?
-                VidyoConnectorState.VidyoConnectorStateDisconnected : VidyoConnectorState.VidyoConnectorStateDisconnectedUnexpected;
+
+            switch (reason)
+            {
+                case Connector.ConnectorDisconnectReason.ConnectordisconnectreasonDisconnected:
+                    ConnectorState = VidyoConnectorState.VidyoConnectorStateDisconnected;
+                    break;
+                default:
+                    ConnectorState = VidyoConnectorState.VidyoConnectorStateDisconnectedUnexpected;
+                    break;
+            }
         }
+
+        /* Debug option */
+
+        public void EnableDebugging()
+        {
+            mConnector.EnableDebug(7776, "warning info@VidyoClient info@VidyoConnector");
+        }
+
+        public void DisableDebugging()
+        {
+            mConnector.DisableDebug();
+        }
+
+        /* Log event listener */
 
         public void OnLog(LogRecord logRecord)
         {
             mLogger.LogClientLib(logRecord.message);
         }
+
+        /* Local camera */
 
         public void OnLocalCameraAdded(LocalCamera localCamera)
         {
@@ -243,14 +309,48 @@ namespace VidyoConnector
             mLogger.Log("OnLocalCameraStateUpdated");
         }
 
-        public void EnableDebugging()
+        /* Local speaker */
+
+        public void OnLocalSpeakerAdded(LocalSpeaker localSpeaker)
         {
-            mConnector.EnableDebug(7776, "warning info@VidyoClient info@VidyoConnector");
+            mLogger.Log("OnLocalSpeakerAdded");
         }
 
-        public void DisableDebugging()
+        public void OnLocalSpeakerRemoved(LocalSpeaker localSpeaker)
         {
-            mConnector.DisableDebug();
+            mLogger.Log("OnLocalSpeakerRemoved");
+        }
+
+        public void OnLocalSpeakerSelected(LocalSpeaker localSpeaker)
+        {
+            mLogger.Log("OnLocalSpeakerSelected");
+        }
+
+        public void OnLocalSpeakerStateUpdated(LocalSpeaker localSpeaker, VidyoClient.Device.DeviceState state)
+        {
+            mLogger.Log("OnLocalSpeakerStateUpdated");
+        }
+
+        /* Local microphone */
+
+        public void OnLocalMicrophoneAdded(LocalMicrophone localMicrophone)
+        {
+            mLogger.Log("OnLocalMicrophoneAdded");
+        }
+
+        public void OnLocalMicrophoneRemoved(LocalMicrophone localMicrophone)
+        {
+            mLogger.Log("OnLocalMicrophoneRemoved");
+        }
+
+        public void OnLocalMicrophoneSelected(LocalMicrophone localMicrophone)
+        {
+            mLogger.Log("OnLocalMicrophoneSelected");
+        }
+
+        public void OnLocalMicrophoneStateUpdated(LocalMicrophone localMicrophone, VidyoClient.Device.DeviceState state)
+        {
+            mLogger.Log("OnLocalMicrophoneStateUpdated");
         }
     }
 }
