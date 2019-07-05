@@ -20,7 +20,7 @@ namespace VidyoConnector
             this.mVidyoController = vidyoController;
 
             HomePage homePage = new HomePage(vidyoController);
-            MainPage = homePage;
+            MainPage = new NavigationPage(homePage);
         }
 
         protected override void OnStart()

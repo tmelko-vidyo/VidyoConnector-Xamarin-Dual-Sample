@@ -10,7 +10,7 @@ namespace VidyoConnector
         String Construct(Controls.NativeView videoView);
 
         // Release connector instance
-        void Destruct();
+        void CleanUp();
 
         // Page high-level lifecycle events
         void OnAppResume();
@@ -23,8 +23,11 @@ namespace VidyoConnector
         bool Connect(string host, string token, string displayName, string resourceId);
         void Disconnect();
 
-        // Orientation has changed
+        // Orientation has changed or new UI size allocated
         void RefreshUI();
+
+        // Refresh video view handle
+        void RefreshViewHandle();
 
         void SetCameraPrivacy(bool privacy);
         void SetMicrophonePrivacy(bool privacy);

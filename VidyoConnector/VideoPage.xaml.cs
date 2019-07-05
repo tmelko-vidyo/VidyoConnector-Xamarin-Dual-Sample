@@ -11,10 +11,8 @@ namespace VidyoConnector
 
         Logger mLogger = Logger.GetInstance();
 
-        double mPageWidth = 0;
-        double mPageHeight = 0;
-
-        bool mAllowReconnect = true;
+        double mPageWidth;
+        double mPageHeight;
 
         public VideoPage()
         {
@@ -43,6 +41,16 @@ namespace VidyoConnector
 
         async void OnQuit(object sender, EventArgs args)
         {
+            if (mVidyoController != null && mVidyoController.ConnectorState == VidyoConnectorState.VidyoConnectorStateConnected)
+            {
+                mLogger.Log("We can't quit since in Connected state.");
+
+                _ = DisplayAlert("Warining", "Exit active conference is not allowed. You have to disconnect first.", "Ok");
+                return;
+            }
+
+            this.mViewModel.Refresh();
+
             await Navigation.PopModalAsync();
         }
 
@@ -76,7 +84,10 @@ namespace VidyoConnector
             base.OnDisappearing();
             mLogger.Log("On Disappearing.");
 
-            if (mVidyoController != null) mVidyoController.Destruct();
+            if (mVidyoController != null)
+            {
+                mVidyoController.CleanUp();
+            }
         }
 
         void OnCameraPrivacyButtonClicked(object sender, EventArgs args)
@@ -123,21 +134,14 @@ namespace VidyoConnector
                     // Set the status text in the toolbar
                     mViewModel.ToolbarStatus = VidyoDefs.StateDescription[value];
 
-                    if (value == VidyoConnectorState.VidyoConnectorStateConnected)
+                    switch (value)
                     {
-
-                    }
-                    else
-                    {
-                        // VidyoConnector is disconnected
-
-                        // If the allow-reconnect flag is set to false and a normal (non-failure) disconnect occurred,
-                        // then disable the toggle connect button, in order to prevent reconnection.
-                        if (!mAllowReconnect && (value == VidyoConnectorState.VidyoConnectorStateDisconnected))
-                        {
-                            _toggleConnectButton.IsEnabled = false;
+                        case VidyoConnectorState.VidyoConnectorStateConnected:
+                            // Connected
+                            break;
+                        case VidyoConnectorState.VidyoConnectorStateDisconnected:
                             mViewModel.ToolbarStatus = "Call ended";
-                        }
+                            break;
                     }
 
                     // Hide the loading animation
@@ -160,8 +164,17 @@ namespace VidyoConnector
                 if (mVidyoController != null)
                 {
                     mVidyoController.RefreshUI();
+
+                    /* Make sure video view handle was setted properly */
+                    mVidyoController.RefreshViewHandle();
                 }
             }
+        }
+
+        /* Quit won't be handled here since we should disconnect first */
+        protected override bool OnBackButtonPressed()
+        {
+            return true;
         }
     }
 }

@@ -9,32 +9,52 @@ namespace VidyoConnector
         private static ViewModel _instance = new ViewModel();
         public static ViewModel GetInstance() { return _instance; }
 
-        private ViewModel() 
-        { 
-            this.DisplayDiagnostics = false; 
+        private ViewModel()
+        {
+            this.DisplayDiagnostics = false;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        const string _cameraOnImage      = "camera_on.png";
-        const string _cameraOffImage     = "camera_off.png";
-        const string _microphoneOnImage  = "microphone_on.png";
+        const string _ready = "Ready to Connect";
+
+        const string _cameraOnImage = "camera_on.png";
+        const string _cameraOffImage = "camera_off.png";
+        const string _microphoneOnImage = "microphone_on.png";
         const string _microphoneOffImage = "microphone_off.png";
-        const string _callStartImage     = "call_start.png";
-        const string _callEndImage       = "call_end.png";
-        const string _gearIMage          = "gear.png";
-        string _cameraPrivacyImage       = _cameraOnImage;
-        string _microphonePrivacyImage   = _microphoneOnImage;
-        string _callImage                = _callStartImage;
-        bool   _cameraPrivacy            = false;
-        bool   _microphonePrivacy        = false;
-        string _host                     = "prod.vidyo.io";
-        string _token                    = "cHJvdmlzaW9uAHVzZXIxQDg3MTFlMC52aWR5by5pbwA2MzcxNjc2ODM2NgAANjNmMGNkYmRlM2NhZTUwZjAyMzk4YWQ3MjQ3ODlmODI5ZGMwMzhjZjkwOTlkZjVhZDU0MWQ5Yjc1ZjllNjc1YWVlZTNjMTM1YTdhZDY5MWEyZDUxNGFhYzFlZTUwYjZj"; // INSERT VALID TOKEN
-        string _displayName              = "XamarinUser";
-        string _resourceId               = "DemoRoom";
-        string _toolbarStatus            = "Ready to Connect";
-        string _clientVersion            = "v 0.0.00.x";
-        VidyoCallAction _callAction      = VidyoCallAction.VidyoCallActionConnect;
+        const string _callStartImage = "call_start.png";
+        const string _callEndImage = "call_end.png";
+        const string _gearIMage = "gear.png";
+
+        string _cameraPrivacyImage = _cameraOnImage;
+        string _microphonePrivacyImage = _microphoneOnImage;
+        string _callImage = _callStartImage;
+
+        bool _cameraPrivacy = false;
+        bool _microphonePrivacy = false;
+
+        string _toolbarStatus = _ready;
+        string _clientVersion = "v 0.0.00.x";
+
+        string _host = "prod.vidyo.io";
+        string _token = "cHJvdmlzaW9uAHVzZXIxQDg3MTFlMC52aWR5by5pbwA2MzcyOTY0MzAyOAAAZWExZDU5MGNiYzUwOTQzNzJhY2VlZDY0NTY2ZWRhM2MxMjYyMzlkYjUzMTBlYTQ3MGYxOTI3MjFjZTU5MDFjZWViMTU4YWY4MTAzYzg5NmExYzBiY2U4MWVkZjUzY2I3"; // INSERT VALID TOKEN
+        string _displayName = "XamarinUser";
+        string _resourceId = "demoRoom";
+
+        VidyoCallAction _callAction = VidyoCallAction.VidyoCallActionConnect;
+
+        public void Refresh()
+        {
+            _cameraPrivacy = false;
+            _microphonePrivacy = false;
+
+            _cameraPrivacyImage = _cameraOnImage;
+            _microphonePrivacyImage = _microphoneOnImage;
+
+            _callAction = VidyoCallAction.VidyoCallActionConnect;
+            _callImage = _callStartImage;
+            _toolbarStatus = _ready;
+        }
 
         public bool ToggleCameraPrivacy()
         {
@@ -59,7 +79,8 @@ namespace VidyoConnector
 
         public VidyoCallAction CallAction
         {
-            set {
+            set
+            {
                 _callAction = value;
                 CallImage = _callAction == VidyoCallAction.VidyoCallActionConnect ? _callStartImage : _callEndImage;
             }
@@ -69,8 +90,10 @@ namespace VidyoConnector
         public string Host
         {
             get { return _host; }
-            set {
-                if (_host != value) {
+            set
+            {
+                if (_host != value)
+                {
                     _host = value;
                     OnPropertyChanged("Host");
                 }
@@ -80,8 +103,10 @@ namespace VidyoConnector
         public string Token
         {
             get { return _token; }
-            set {
-                if (_token != value) {
+            set
+            {
+                if (_token != value)
+                {
                     _token = value;
                     OnPropertyChanged("Token");
                 }
@@ -91,8 +116,10 @@ namespace VidyoConnector
         public string DisplayName
         {
             get { return _displayName; }
-            set {
-                if (_displayName != value) {
+            set
+            {
+                if (_displayName != value)
+                {
                     _displayName = value;
                     OnPropertyChanged("DisplayName");
                 }
@@ -102,8 +129,10 @@ namespace VidyoConnector
         public string ResourceId
         {
             get { return _resourceId; }
-            set {
-                if (_resourceId != value) {
+            set
+            {
+                if (_resourceId != value)
+                {
                     _resourceId = value;
                     OnPropertyChanged("ResourceId");
                 }
@@ -113,8 +142,10 @@ namespace VidyoConnector
         public string ToolbarStatus
         {
             get { return _toolbarStatus; }
-            set {
-                if (_toolbarStatus != value) {
+            set
+            {
+                if (_toolbarStatus != value)
+                {
                     _toolbarStatus = value;
                     OnPropertyChanged("ToolbarStatus");
                 }
@@ -124,8 +155,10 @@ namespace VidyoConnector
         public string ClientVersion
         {
             get { return _clientVersion; }
-            set {
-                if (_clientVersion != value) {
+            set
+            {
+                if (_clientVersion != value)
+                {
                     _clientVersion = value;
                     OnPropertyChanged("ClientVersion");
                 }
@@ -135,8 +168,10 @@ namespace VidyoConnector
         public string CallImage
         {
             get { return _callImage; }
-            set {
-                if (_callImage != value) {
+            set
+            {
+                if (_callImage != value)
+                {
                     _callImage = value;
                     OnPropertyChanged("CallImage");
                 }
@@ -146,8 +181,10 @@ namespace VidyoConnector
         public string CameraPrivacyImage
         {
             get { return _cameraPrivacyImage; }
-            set {
-                if (_cameraPrivacyImage != value) {
+            set
+            {
+                if (_cameraPrivacyImage != value)
+                {
                     _cameraPrivacyImage = value;
                     OnPropertyChanged("CameraPrivacyImage");
                 }
@@ -159,8 +196,10 @@ namespace VidyoConnector
         public string MicrophonePrivacyImage
         {
             get { return _microphonePrivacyImage; }
-            set {
-                if (_microphonePrivacyImage != value) {
+            set
+            {
+                if (_microphonePrivacyImage != value)
+                {
                     _microphonePrivacyImage = value;
                     OnPropertyChanged("MicrophonePrivacyImage");
                 }
@@ -170,7 +209,8 @@ namespace VidyoConnector
         protected virtual void OnPropertyChanged(string propertyName)
         {
             var changed = PropertyChanged;
-            if (changed != null) {
+            if (changed != null)
+            {
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
             }
         }
