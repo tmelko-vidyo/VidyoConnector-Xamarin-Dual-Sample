@@ -26,9 +26,6 @@ namespace VidyoConnector
         // Orientation has changed or new UI size allocated
         void RefreshUI();
 
-        // Refresh video view handle
-        void RefreshViewHandle();
-
         void SetCameraPrivacy(bool privacy);
         void SetMicrophonePrivacy(bool privacy);
 

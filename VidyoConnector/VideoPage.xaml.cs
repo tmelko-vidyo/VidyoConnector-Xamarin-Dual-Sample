@@ -25,9 +25,12 @@ namespace VidyoConnector
         public void Initialize(IVidyoController vidyoController)
         {
             this.mVidyoController = vidyoController;
-            this.mViewModel.ClientVersion = this.mVidyoController.Construct(_videoView);
 
-            INotifyPropertyChanged i = (INotifyPropertyChanged)this.mVidyoController;
+            _videoView.OnHandleSet = new Command(() => {
+                this.mViewModel.ClientVersion = this.mVidyoController.Construct(_videoView);
+            });
+
+            INotifyPropertyChanged i = (INotifyPropertyChanged) this.mVidyoController;
             i.PropertyChanged += new PropertyChangedEventHandler(VidyoControllerPropertyChanged);
         }
 
@@ -83,6 +86,11 @@ namespace VidyoConnector
         {
             base.OnDisappearing();
             mLogger.Log("On Disappearing.");
+
+            if (_videoView != null)
+            {
+                _videoView.OnHandleSet = null;
+            }
 
             if (mVidyoController != null)
             {
@@ -164,9 +172,6 @@ namespace VidyoConnector
                 if (mVidyoController != null)
                 {
                     mVidyoController.RefreshUI();
-
-                    /* Make sure video view handle was setted properly */
-                    mVidyoController.RefreshViewHandle();
                 }
             }
         }
