@@ -38,8 +38,6 @@ namespace VidyoConnector
         private string mExperimentalOptions;
         private bool mCameraPrivacyState;
 
-        private bool mIsViewHandleValid;
-
         private Logger mLogger = Logger.GetInstance();
 
         private VidyoConnectorState mState;
@@ -87,9 +85,6 @@ namespace VidyoConnector
             // Remember the reference to video view
             this.mVideoViewHolder = videoView;
 
-            // Check video view handel. I
-            this.mIsViewHandleValid = videoView.Handle != IntPtr.Zero;
-
             mConnector = new Connector(this.mVideoViewHolder.Handle,
                                                Connector.ConnectorViewStyle.ConnectorviewstyleDefault,
                                                MAX_PARTICIPANTS,
@@ -132,7 +127,7 @@ namespace VidyoConnector
                 mLogger.Log("VidyoConnector RegisterLocalSpeakerEventListener failed");
             }
 
-            mLogger.Log("Connector instance has been created. View handle state: " + this.mIsViewHandleValid);
+            mLogger.Log("Connector instance has been created.");
             return clientVersion;
         }
 
@@ -219,23 +214,6 @@ namespace VidyoConnector
                 mConnector.ShowViewAt(mVideoViewHolder.Handle, 0, 0, width, height);
 
                 mLogger.Log("VidyoConnectorShowViewAt: x = 0, y = 0, w = " + width + ", h = " + height);
-            }
-        }
-
-        public void RefreshViewHandle()
-        {
-            /* Video view handle was not valid on initialization state. Let's reassing it again */
-            if (!this.mIsViewHandleValid)
-            {
-                mConnector.AssignViewToCompositeRenderer(mVideoViewHolder.Handle, Connector.ConnectorViewStyle.ConnectorviewstyleDefault, MAX_PARTICIPANTS);
-                RefreshUI();
-
-                this.mIsViewHandleValid = mVideoViewHolder.Handle != IntPtr.Zero;
-                mLogger.Log("Video handle has been refreshed. Valid: " + this.mIsViewHandleValid);
-            }
-            else
-            {
-                mLogger.Log("Video handle was valid on construct step.");
             }
         }
 
