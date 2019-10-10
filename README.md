@@ -1,7 +1,7 @@
 # VidyoConnector Xamarin Navigation
 
 ## Clone Repository
-git clone https://github.com/tmelko-vidyo/vidyo-io-connector-xamarin-multi-page.git
+git clone https://github.com/tmelko-vidyo/vidyo-io-connector-xamarin-navigation.git
 
 ## Overview
 VidyoConnector-xamarin is a Xamarin Forms cross platform application which contains three projects:
@@ -13,9 +13,9 @@ VidyoConnector-xamarin is a Xamarin Forms cross platform application which conta
 > Note: Highlighted steps are very important because samples already contain configurations specified below and both SDK packages are linked as relative folders located in VidyoConnector-xamarin directory.
 
 1. Download the latest Vidyo.io iOS SDK package: https://static.vidyo.io/latest/package/VidyoClient-iOSSDK.zip
-2. **Move the unzipped VidyoClient-iOSSDK folder to the /vidyo-io-connector-xamarin-multi-page/ directory.**
+2. **Move the unzipped VidyoClient-iOSSDK folder to the /vidyo-io-connector-xamarin-navigation/ directory.**
 3. Download the latest Vidyo.io Android SDK package: https://static.vidyo.io/latest/package/VidyoClient-AndroidSDK.zip
-4. **Move the unzipped VidyoClient-AndroidSDK folder to the /vidyo-io-connector-xamarin-multi-page/ directory.**
+4. **Move the unzipped VidyoClient-AndroidSDK folder to the /vidyo-io-connector-xamarin-navigation/ directory.**
 
 > Note: VidyoClient SDK version 19.2.0.8 or later is required.
 
