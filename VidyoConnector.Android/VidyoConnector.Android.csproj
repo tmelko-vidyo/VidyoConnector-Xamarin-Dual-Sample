@@ -448,8 +448,11 @@
     <Compile Include="..\VidyoClient-AndroidSDK\include\csharp\VirtualShareManager.cs">
       <Link>VidyoClient-AndroidSDK\include\csharp\VirtualShareManager.cs</Link>
     </Compile>
-    <Compile Include="..\VidyoClient-AndroidSDK\include\csharp\VirtualWindowShare.cs">
-      <Link>VidyoClient-AndroidSDK\include\csharp\VirtualWindowShare.cs</Link>
+    <Compile Include="..\VidyoClient-AndroidSDK\include\csharp\VirtualVideoSource.cs">
+      <Link>VidyoClient-AndroidSDK\include\csharp\VirtualVideoSource.cs</Link>
+    </Compile>
+    <Compile Include="..\VidyoClient-AndroidSDK\include\csharp\ByteArrayHelper.cs">
+      <Link>VidyoClient-AndroidSDK\include\csharp\ByteArrayHelper.cs</Link>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -459,9 +462,6 @@
     <None Include="packages.config" />
     <None Include="..\VidyoClient-AndroidSDK\.DS_Store">
       <Link>VidyoClient-AndroidSDK\.DS_Store</Link>
-    </None>
-    <None Include="..\VidyoClient-AndroidSDK\include\.DS_Store">
-      <Link>VidyoClient-AndroidSDK\include\.DS_Store</Link>
     </None>
     <None Include="..\VidyoClient-AndroidSDK\lib\.DS_Store">
       <Link>VidyoClient-AndroidSDK\lib\.DS_Store</Link>
