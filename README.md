@@ -1,4 +1,4 @@
-# Xamarin-MultiPage-Sample
+# VidyoConnector Xamarin Navigation
 
 ## Clone Repository
 git clone https://github.com/tmelko-vidyo/vidyo-io-connector-xamarin-multi-page.git
