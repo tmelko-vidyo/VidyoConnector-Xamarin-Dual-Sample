@@ -1,7 +1,7 @@
 # Xamarin-MultiPage-Sample
 
 ## Clone Repository
-git clone https://github.com/tmelko-vidyo/Xamarin-MultiPage-Sample
+git clone https://github.com/tmelko-vidyo/vidyo-io-connector-xamarin-multi-page.git
 
 ## Overview
 VidyoConnector-xamarin is a Xamarin Forms cross platform application which contains three projects:
@@ -17,7 +17,7 @@ VidyoConnector-xamarin is a Xamarin Forms cross platform application which conta
 3. Download the latest Vidyo.io Android SDK package: https://static.vidyo.io/latest/package/VidyoClient-AndroidSDK.zip
 4. **Move the unzipped VidyoClient-AndroidSDK folder to the Xamarin-MultiPage-Sample directory.**
 
-> Note: VidyoClient SDK version 4.1.23.21 or later is required.
+> Note: VidyoClient SDK version 19.2.0.8 or later is required.
 
 ## Importing VidyoClient iOS SDK
 > Note: the below steps are already performed in the VidyoConnector.iOS project in the VidyoConnector-xamarin solution. These instructions are intended to show how a developer would import the library into their own application. Therefore, do not perform these steps in this application, which would lead to duplicated libraries and compilation errors. However, one important step is necessary when building on Windows (as opposed to macOS), which is to prevent the iOS native frameworks from being linked. This can be achieved by doing the following: in the solution window under the Xamarin.iOS project, expand "Native references", select "libVidyoClient.a", and press F4 to open specific properties window. Remove all linked "Frameworks" (AudioToolbox, AVFoundation, etc). Save the solution. After you have verified that you placed the SDK in the proper folder, please skip to the "Build and Run Application" section.
