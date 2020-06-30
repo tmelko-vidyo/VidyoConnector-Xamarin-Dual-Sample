@@ -460,6 +460,9 @@
     <Compile Include="..\VidyoClient-AndroidSDK\include\csharp\VirtualWindowShare.cs">
       <Link>VidyoClient-AndroidSDK\include\csharp\VirtualWindowShare.cs</Link>
     </Compile>
+    <Compile Include="..\VidyoClient-iOSSDK\include\csharp\SizeT.cs">
+      <Link>include\csharp\SizeT.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />

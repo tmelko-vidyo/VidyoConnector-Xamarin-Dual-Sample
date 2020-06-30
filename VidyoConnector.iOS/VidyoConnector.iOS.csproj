@@ -1479,6 +1479,9 @@
     <Compile Include="..\VidyoClient-iOSSDK\include\csharp\VirtualWindowShare.cs">
       <Link>include\csharp\VirtualWindowShare.cs</Link>
     </Compile>
+    <Compile Include="..\VidyoClient-iOSSDK\include\csharp\SizeT.cs">
+      <Link>include\csharp\SizeT.cs</Link>
+    </Compile>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
