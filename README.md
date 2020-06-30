@@ -48,6 +48,9 @@ To use the VidyoClient SDK in a Xamarin.iOS app, perform the following steps:
 6. In the solution window, right-click on the Xamarin.iOS project and select "Add Native Reference" > "Add Native Framework Library"
 7. In the folder-selection dialog, browse to project subdirectory“VidyoClient-iOSSDK/lib/ios”
 8. Select VPX.framework folder. Click OK.
+9. In the Solution pad, expand the new "Native References" folder in the project; right-click "libVidyoClient"; and choose "Properties".
+10. In that "Properties" pad, go to the "Frameworks" field.
+11. Enter the following list of iOS frameworks from Apple: AudioToolbox AVFoundation CoreLocation CoreMedia SystemConfiguration UIKit
 
 > Note: Linking of iOS Frameworks does not take place on Windows platform.
 
